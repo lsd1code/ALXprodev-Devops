@@ -2,14 +2,12 @@
 
 #response=$(curl -s https://pokeapi.co/api/v2/pokemon/pikachu | jq . > prettier.json)
 
-#name = $(cat prettier.json | awk '/"name": "pikachu"/ {print $2}')
-
 name=$(cat prettier.json | awk '/"name": "pikachu"/ {print $2; exit}'  | sed 's/"//g; s/,//')
-
 height=$(cat prettier.json | awk '/"height":/ {print $2}' | sed 's/,//')
-
 weight=$(cat prettier.json | awk '/"weight":/ {print $2}' | sed 's/,//')
+type=$(cat prettier.json | awk '/"electric"/ {print $2}' | sed 's/"//g; s/,//')
 
-p_type=$(cat prettier.json | awk '/"electric"/ {print $2}' | sed 's/"//g; s/,//')
+formatted_weight=$(( $weight / 10 ))
+formatted_height=$(awk "BEGIN{print $height / 10}")
 
-echo "${name^} is type of ${p_type}, weighs ${weight}kg, and is ${height}m tall"
+echo "${name^} is type of ${type^}, weighs ${formatted_weight}kg, and is ${formatted_height}m tall"

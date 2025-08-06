@@ -19,7 +19,7 @@ for pokemon in ${pokemons[@]}; do
     
     p_url="${url}/${pokemon}"
 
-    curl -s $url | jq . > ${file} 2>> error.log
+    curl -s $p_url | jq . > ${file} 2>> error.log
     
     echo "Saved data to $file ✅"
 

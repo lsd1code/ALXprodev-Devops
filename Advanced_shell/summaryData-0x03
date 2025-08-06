@@ -1,0 +1,39 @@
+#!/bin/bash
+
+dir="./pokemon_data"
+files=($(ls $dir))
+pokemon_report_file='./pokemon_report.csv'
+
+total_weight=0
+total_height=0
+number_pokemon=${#files[@]}
+
+if [[ -f $pokemon_report_file ]]; then
+    echo "File Exists" > /dev/null
+else
+    touch $pokemon_report_file
+
+    sleep 1
+
+    echo "Name, Height (m), Weight (kg)" > $pokemon_report_file 
+fi
+
+
+for file in ${files[@]}; do    
+    path="${dir}/${file}"
+    
+    name=${file%.*}
+    height=$(awk '/"height":/ {print $2}' $path | sed 's/,//')
+    weight=$(awk '/"weight":/ {print $2}' $path | sed 's/,//')
+
+    total_height=$(( $total_height + $height ))
+    total_weight=$(( $total_weight + $weight ))
+
+    echo "$name,$weight,$height" >> $pokemon_report_file
+done
+
+avg_height=$(awk -v height=$total_height -v total=$number_pokemon 'BEGIN {print (height / total) / 10} ')
+avg_weight=$(awk -v weight=$total_weight -v total=$number_pokemon 'BEGIN {print (weight / total) / 10} ')
+
+echo "Average Height: $avg_height m"
+echo "Average Weight: $avg_weight kg"

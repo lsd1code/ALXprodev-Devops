@@ -1,0 +1,27 @@
+#!/bin/bash
+
+url="https://pokeapi.co/api/v2/pokemon"
+
+pokemons=(bulbasaur ivysaur venusaur charmander charmeleon)
+
+
+if [ -d "./pokemon_data" ]; then
+    echo "directory exists" > /dev/null
+else
+    mkdir pokemon_data
+fi
+
+
+for pokemon in ${pokemons[@]}; do
+    echo "Fetching data for ${pokemon}"
+
+    file="./pokemon_data/${pokemon}.json"
+    
+    p_url="${url}/${pokemon}"
+
+    curl -s $url | jq . > ${file} 2>> error.log
+    
+    echo "Saved data to $file ✅"
+
+    sleep 2
+done

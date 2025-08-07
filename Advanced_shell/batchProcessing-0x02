@@ -19,9 +19,21 @@ for pokemon in ${pokemons[@]}; do
     
     p_url="${url}/${pokemon}"
 
-    curl -s $p_url | jq . > ${file} 2>> error.log
-    
-    echo "Saved data to $file ✅"
+    retry_count=3
 
-    sleep 2
+    while [ $retry_count -gt 0 ]; do
+        
+        if [[ $retry_count -eq 1 ]]; then 
+            echo "last retry attempt"
+        fi
+
+
+        retry_count=$(( $retry_count - 1 ))
+    done
+
+    #curl -s $p_url | jq . > ${file} 2>> error.log
+    
+    #echo "Saved data to $file ✅"
+    
+    #sleep 2
 done

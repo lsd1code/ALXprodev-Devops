@@ -20,7 +20,7 @@ for pokemon in ${pokemons[@]}; do
     retry_count=3
 
     while [ $retry_count -gt 0 ]; do
-        response=$(curl -s -w "%{http_code}" $p_url 2>> error.log | jq .)
+        response=$(curl -s -w "%{http_code}" $p_url 2>> errors.log | jq .)
         
         status_code=$(echo "$response" | tail -n 1)
         

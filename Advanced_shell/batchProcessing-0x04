@@ -1,0 +1,16 @@
+#!/bin/bash
+url="https://pokeapi.co/api/v2/pokemon"
+
+pokemons=(Bulbasaur Ivysaur Venusaur Charmander Charmeleon)
+
+for pokemon in ${pokemons[@]}; do
+    p_url="${url}/${pokemon}"
+
+    file="./pokemon_data/${pokemon}.json"
+
+    curl -s $p_url | jq . 2>> errors.log &  
+done
+
+wait
+
+echo "all processes complete ✅"

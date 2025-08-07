@@ -8,9 +8,13 @@ for pokemon in ${pokemons[@]}; do
 
     file="./pokemon_data/${pokemon}.json"
 
-    curl -s $p_url | jq . 2>> errors.log &  
+    curl -s $p_url | jq . 2>> errors.log &      
 done
 
 wait
+
+curr_jobs=$(jobs -p)
+
+kill $curr_jobs
 
 echo "all processes complete ✅"

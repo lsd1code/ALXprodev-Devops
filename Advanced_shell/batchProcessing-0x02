@@ -1,7 +1,5 @@
 #!/bin/bash
-
 url="https://pokeapi.co/api/v2/pokemon"
-
 pokemons=(bulbasaur ivysaur venusaur charmander charmeleon)
 
 
@@ -22,18 +20,24 @@ for pokemon in ${pokemons[@]}; do
     retry_count=3
 
     while [ $retry_count -gt 0 ]; do
+        response=$(curl -s -w "%{http_code}" $p_url 2>> error.log | jq .)
         
-        if [[ $retry_count -eq 1 ]]; then 
-            echo "last retry attempt"
+        status_code=$(echo "$response" | tail -n 1)
+        
+        if [[ $status_code -eq "200" ]]; then
+            data=$(echo "$response" | head -n -1)
+
+            echo $data | jq . > $file
+            
+            echo "Saved data to $file ✅"
+
+            sleep 1
+        
+            break
         fi
 
-
         retry_count=$(( $retry_count - 1 ))
-    done
-
-    #curl -s $p_url | jq . > ${file} 2>> error.log
-    
-    #echo "Saved data to $file ✅"
-    
-    #sleep 2
+        
+        sleep 1
+    done    
 done
